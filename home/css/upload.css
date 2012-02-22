@@ -1,0 +1,59 @@
+@charset 'UTF-8';
+
+#header{
+	margin:20px 20px 20px 30px;
+	height:40px;
+}
+#header h2{
+	float:left;
+}
+.browse-img {
+	overflow:hidden;
+	position: relative;	
+	margin:6px 0 0 20px;
+}
+.browse-img input {
+  opacity: 0;	
+  border: solid transparent;
+  border-width: 0 0 100px 200px;
+  filter: alpha(opacity=0);
+  -moz-transform: translate(-300px, 0) scale(4);
+  direction: ltr;
+  cursor: pointer;
+  position: absolute; top: 0; right: 0; margin: 0;
+}
+#loader{
+	width:208px;
+	height:13px;
+	position:absolute;
+	left:60px; top:120px;
+	background:url('../img/loading.gif') no-repeat;	
+}
+#preview {
+	padding:10px 10px 10px 20px;	
+	margin-left:20px;
+	width:606px;
+	height:160px;
+	border:1px solid grey;
+}
+#preview .details{
+	float:left;
+	margin-right:10px;
+}
+#preview .details .img{
+	width:160px;
+	height:120px;	
+	border:1px solid #ccc;	
+}
+#preview textarea {
+	width:412px; 
+	height:110px;	
+}
+
+#controls{
+	float:right;
+	margin:10px 20px 0 0;
+}
+button i, .browse-img i{
+	padding-right:5px;
+}
