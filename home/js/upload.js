@@ -53,7 +53,16 @@ function onCancel()
 
 function onPublish()
 {
-	console.log('publishing');	
+	$.ajax({
+		type: "POST",
+		url: './php/query.php',
+		data: {
+			type:'PUBLISH-IMAGE', file:imgName, desc:$("#img-desc").val(), proj:pid
+		},
+		success: function(response){
+			console.log('response = '+response);
+		}
+	});
 }
 
 function showPreview(b)

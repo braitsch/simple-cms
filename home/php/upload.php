@@ -40,7 +40,7 @@ function resizeImage($img, $width, $height)
 	$new = imagecreatetruecolor($width, $height);
 	imagecopyresampled($new, $dup, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
 	imagedestroy($dup);
-	return array('image' => $new, 'width' => $width, 'height' => $height);
+	return $new;
 }
 
 $src = copyImage($src_img);
@@ -48,10 +48,10 @@ imagejpeg($src, '../' . IMG_SRC_DIR . "/$img_name", 100);
 imagedestroy($src);
 
 $tmb = resizeImage($src_img, 160, 120);
-imagejpeg($tmb['image'], '../' . IMG_TMB_DIR . "/$img_name", 100);
-imagedestroy($tmb['image']);
+imagejpeg($tmb, '../' . IMG_TMB_DIR . "/$img_name", 100);
+imagedestroy($tmb);
 
-$a = array('file' => IMG_TMB_DIR.'/'.$img_name, 'name' => $img_name, 'width' => $tmb['width'], 'height' => $tmb['height']);
+$a = array('file' => IMG_TMB_DIR.'/'.$img_name, 'name' => $img_name);
 echo json_encode($a);
 
 // this simply moves the uploaded file into a directory on the server
