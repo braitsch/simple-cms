@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+require_once('./globals.php');
 require_once('../../shared/db-connect.php');
 
 switch ($_REQUEST['type']) {
@@ -47,11 +48,19 @@ function saveNewProject()
 function loadProject()
 {
     $title = $_REQUEST['title'];
-    $r = mysql_query("SELECT * FROM projects");
-    while ($row = mysql_fetch_assoc($r)){
-    	if ($title==$row['title']){ echo json_encode($row); exit; }
+    $r = mysql_query("SELECT * FROM projects WHERE title='$title'");
+    if (mysql_num_rows($r)){
+        $o = mysql_fetch_array($r); $proj = $o['id'];
+        $r = mysql_query("SELECT `file`, `desc` FROM media WHERE proj='$proj'");
+        if (mysql_num_rows($r)){
+    // append the thumbs onto the project object //             
+            $o['images'] = array();
+            while($img = mysql_fetch_array($r)) array_push($o['images'], $img);
+        }
+        echo json_encode($o);
+    }   else{
+        echo 'error -- project not found!';
     }
-    echo 'error::project not found';
 }
 
 function editProject()
@@ -59,7 +68,7 @@ function editProject()
     $id = $_REQUEST['id']; $title = $_REQUEST['title']; $desc = $_REQUEST['desc'];        
     $r = mysql_query("UPDATE `projects` SET `title`='$title', `desc`='$desc' WHERE id='$id'");
     if ($r) {
-        getProjectList();
+        getProjectList();  
     }   else{
         echo mysql_error();
     }    
@@ -68,7 +77,14 @@ function editProject()
 function deleteProject()
 {
     $id = $_REQUEST['id'];
-    $r = mysql_query("DELETE FROM projects WHERE id='$id'");
+// delete all media associated with this project //    
+    $r = mysql_query("SELECT file FROM media WHERE proj='$id'");
+    while($o = mysql_fetch_array($r)){
+        unlink('../'. IMG_SRC_DIR . '/' . $o['file']);
+        unlink('../'. IMG_TMB_DIR . '/' . $o['file']);            
+    }
+    $r = mysql_query("DELETE FROM media WHERE proj='$id'");
+    $r = mysql_query("DELETE FROM projects WHERE id='$id'");    
     if ($r) {
         getProjectList();
     }   else{

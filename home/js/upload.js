@@ -60,7 +60,7 @@ function onPublish()
 			type:'PUBLISH-IMAGE', file:imgName, desc:$("#img-desc").val(), proj:pid
 		},
 		success: function(response){
-			console.log('response = '+response);
+			$.closeDOMWindow();
 		}
 	});
 }

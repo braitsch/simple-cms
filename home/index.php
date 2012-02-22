@@ -82,23 +82,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
         
             <div id='media'>
                 <form class="form-stacked" id='media-label'><label>Images & Videos</label></form>     
-                <ul class="image-grid">
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li> 
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li> 
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>
-                  <li><a href="#"><img src="http://placehold.it/120x90" alt=""></a></li>                                                                                                                                                                                                               
-                </ul>  
+                <ul id="image-grid"></ul>  
                 <div id='media-btns'>      
                     <hr>                            
                     <div class="form-btns"> 

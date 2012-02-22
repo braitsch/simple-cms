@@ -14,12 +14,8 @@ $(document).ready(function() {
 	$("#main-nav li").click(function() { onGlobalNavClick($(this))});	
 	$("#new-project").click(function() { onNewProjectSelect(); });
 	$('.dom-window').click(function(){ 
-		if (pid){
-			$("#add-img h2").html($("#title").val());
-			win.windowSourceID = '#add-img'; $(this).openDOMWindow(win); 	
-		}	else{
-			alert('please create or choose a project before adding images');
-		}
+		$("#add-img h2").html($("#title").val());
+		win.windowSourceID = '#add-img'; $(this).openDOMWindow(win);
 	});
 
 // project editor
@@ -98,23 +94,32 @@ $(document).ready(function() {
 			},
 			success: function(response) {
 				onProjectSelect();
-				var k = eval("(" + response + ")");
+				var k = eval("(" + response + ")");				
 				pid = k['id'];
 				$("#title").val(k['title']);
 				$("#description").val(k['desc']);
 				$("#content h2").html(k['title']);
+				if (k['images']){
+ 					$.each(k['images'], function(i, o) {
+						$("#image-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
+    				});					
+				}
 			}
 		});		
 	}
 // nav selections	
 	function onProjectSelect()
 	{
+		$("#media").show();
+		$("#image-grid").empty();	
 		$("#project-save").hide();
 		$("#project-update").show();
 		$("#project-delete").show();			
 	}
 	function onNewProjectSelect()
 	{	
+		$("#media").hide();		
+		$("#image-grid").empty();		
 		$("#project-save").show();
 		$("#project-update").hide();
 		$("#project-delete").hide();

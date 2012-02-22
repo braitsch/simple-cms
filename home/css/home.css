@@ -38,13 +38,13 @@ textarea { resize: none; padding:5px; margin:0;}
 #details button{
 	margin-top:7px;
 }
-.image-grid{
+#image-grid{
 	padding:0; margin:0; overflow:hidden; height:354px; 
 }
 
-.image-grid li{
-	background-color:#fff;	
-	float: left; width:120px; height:90px; list-style-type:none; margin:0 10px 10px 0; padding: 4px;
+#image-grid li{
+	height:120px; background-color:#ffffff;
+	float: left; list-style-type:none; margin:0 10px 10px 0; padding: 4px;
 	border: 1px solid #DDD;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
