@@ -100,12 +100,12 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                 <!-- The browse-img span is used to style the file input field as a button -->    
                     <span class="btn btn-primary browse-img">
                         <span><i class="icon-plus icon-white"></i>Select Image</span>
-                        <input type="file" name="file" accept="image/gif, image/jpeg"/>
+                        <input type="file" name="file" />
                     </span>
                 </form>
             </div>
-            <div id='loader'></div>            
-            <div id='preview'>
+            <div id='loader' style='display:none;'></div>            
+            <div id='preview' style='display:none;'>
                 <div class='details'>
                     <label id='img-name'>File Name</label><div class='img'><img style='display:block; margin:auto'src='' /></div>
                 </div>
@@ -114,7 +114,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                     <div class="input"><textarea id='img-desc'></textarea></div> 
                 </div>
             </div>
-            <div id='controls'>
+            <div id='controls' style='display:none;'>
                 <button id='btn-cancel' class="btn btn-warning"><i class="icon-ban-circle icon-white"></i>Cancel</button>
                 <button id='btn-publish' class="btn btn-success"><i class="icon-upload icon-white"></i>Publish</button>
             </div>

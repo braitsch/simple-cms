@@ -1,5 +1,4 @@
 var pid;
-var win = {	width:680, height:340, overlayOpacity:'50'}
 var query = './php/query.php';
 
 $(document).ready(function() {
@@ -9,14 +8,11 @@ $(document).ready(function() {
 	});
 	$("#media ul").disableSelection();	
 	$("#project-list ul").sortable();
-	$("#project-list ul").disableSelection();	
-	$("#btn-logout").click(function() { window.location.replace("../logout");});
+	$("#project-list ul").disableSelection();
+	$('.dom-window').click(function()  { showImageUploader() });	
+	$("#btn-logout").click(function()  { window.location.replace("../logout");});
 	$("#main-nav li").click(function() { onGlobalNavClick($(this))});	
 	$("#new-project").click(function() { onNewProjectSelect(); });
-	$('.dom-window').click(function(){ 
-		$("#add-img h2").html($("#title").val());
-		win.windowSourceID = '#add-img'; $(this).openDOMWindow(win);
-	});
 
 // project editor
 
@@ -133,6 +129,5 @@ $(document).ready(function() {
 		e.attr('class','active');
 		console.log(e.text());
 	}	
-	
 	getProjects(); onNewProjectSelect();
 });

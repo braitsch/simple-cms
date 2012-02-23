@@ -1,4 +1,5 @@
-var imgName;
+var imgFileName;
+var win = {	width:680, height:340, overlayOpacity:'50'};
 
 $(document).ready(function(){
 	var options = {
@@ -17,38 +18,35 @@ $(document).ready(function(){
     });
 	$("#btn-cancel").click(onCancel);
 	$("#btn-publish").click(onPublish);
- 	$('#preview').hide(); $('#controls').hide(); $('#loader').hide();	
 }); 
 
 function onRequest(formData, jqForm, options) { 
-    var queryString = $.param(formData);
-	showPreview(false); $('#loader').fadeIn();
-    console.log('About to submit: \n\n' + queryString);
-    return true; 
+	hideImageDetails(); $('#loader').fadeIn();
+    return true;
 } 
  
-function onResponse(responseText, statusText, xhr, $form) { 
-	var n = imgName = responseText.name;
+function onResponse(response, status, xhr, $form) { 
+	var n = imgFileName = response.name;
+// truncate image file name if too long... //	
 	if (n.length > 22) n = '...'+n.substr(-22);
  	$('#img-name').text(n);
- 	$('#preview img').attr('src', responseText.file);
-	showPreview(true); 	$('#loader').fadeOut();
-    console.log('\nstatus: ' + statusText + '\nresponseText: ' + responseText.name); 
+ 	$('#preview img').attr('src', response.file);
+	showImageDetails();
+    console.log('\nstatus: ' + status + '\nresponse: ' + response.name); 
 }
 
 function onCancel()
 {
-	console.log('deleting '+imgName);
 	$.ajax({
 		type: "POST",
 		url: './php/cancel.php',
-		data: { file:imgName },
+		data: { file:imgFileName },
 		success: function(response){
-			if (response == 'ok'){
-				showPreview(false);
-			}
+			if (response == 'ok') hideImageDetails();
 		}
 	});
+	console.log(imgFileName, 'removed from file system');
+	imgFileName = null;
 }
 
 function onPublish()
@@ -57,21 +55,37 @@ function onPublish()
 		type: "POST",
 		url: './php/query.php',
 		data: {
-			type:'PUBLISH-IMAGE', file:imgName, desc:$("#img-desc").val(), proj:pid
+			type:'PUBLISH-IMAGE', file:imgFileName, desc:$("#img-desc").val(), proj:pid
 		},
 		success: function(response){
 			$.closeDOMWindow();
 		}
 	});
+	imgFileName = null;	
 }
 
-function showPreview(b)
+function showImageDetails()
 {
-	if (b == false){
- 		$('#preview').fadeOut(); 
- 		$('#controls').fadeOut();	
-	}	else{		
- 		$('#preview').fadeIn(); 
- 		$('#controls').fadeIn();			
-	}
+ 	$('#loader').fadeOut();	
+	$('#preview').fadeIn();
+	$('#controls').fadeIn();
+}
+
+function hideImageDetails()
+{
+ 	$('#preview').fadeOut();
+ 	$('#controls').fadeOut();
+}
+function showImageUploader()
+{
+	$("#add-img h2").html($("#title").val());
+	win.windowSourceID = '#add-img'; 
+	win.functionCallOnClose = onUploaderClosed; 
+	var k = $(this).openDOMWindow(win);
+ 	$('#preview').hide(); $('#controls').hide(); $('#loader').hide();	
+}
+function onUploaderClosed()
+{
+// remove any orphaned images from the file system //	
+	if (imgFileName) onCancel();
 }

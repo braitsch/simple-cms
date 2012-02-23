@@ -1,12 +1,8 @@
 (function($){
-	
 	//closeDOMWindow
-	$.fn.closeDOMWindow = function(settings){
-		
-		if(!settings){settings={};}
-		
+	$.fn.closeDOMWindow = function(s){
+		var settings = s || {};
 		var run = function(passingThis){
-			
 			if(settings.anchoredClassName){
 				var $anchorClassName = $('.'+settings.anchoredClassName);
 				$anchorClassName.fadeOut('fast',function(){
@@ -16,7 +12,6 @@
 						$anchorClassName.trigger("unload").remove();
 					}
 				});
-				if(settings.functionCallOnClose){settings.functionCallAfterClose();}
 			}else{
 				var $DOMWindowOverlay = $('#DOMWindowOverlay');
 				var $DOMWindow = $('#DOMWindow');
@@ -30,15 +25,11 @@
 						$DOMWindow.trigger("unload").remove();
 					}
 				});
-			
 				$(window).unbind('scroll.DOMWindow');
 				$(window).unbind('resize.DOMWindow');
-				
 				if($.fn.openDOMWindow.isIE6){$('#DOMWindowIE6FixIframe').remove();}
-				if(settings.functionCallOnClose){settings.functionCallAfterClose();}
 			}	
 		};
-		
 		if(settings.eventType){//if used with $().
 			return this.each(function(index){
 				$(this).bind(settings.eventType, function(){
@@ -49,7 +40,8 @@
 		}else{//else called as $.function
 			run();
 		}
-		
+	// call the window closed callback //	
+		if (settings.functionCallOnClose) settings.functionCallOnClose();		
 	};
 	
 	//allow for public call, pass settings
@@ -59,8 +51,6 @@
 	$.fn.openDOMWindow = function(instanceSettings){	
 		
 		var shortcut =  $.fn.openDOMWindow;
-	
-		//default settings combined with callerSettings////////////////////////////////////////////////////////////////////////
 		
 		shortcut.defaultsSettings = {
 			anchoredClassName:'',
@@ -156,14 +146,14 @@
 				$('.'+instance+' #DOMWindowLoader').remove();
 				$('.'+instance+' #DOMWindowContent').fadeIn('fast',function(){if(settings.functionCallOnOpen){settings.functionCallOnOpen();}});
 				$('.'+instance+ '.closeDOMWindow').click(function(){
-					$.closeDOMWindow();	
+					$.closeDOMWindow(settings);	
 					return false;
 				});
 			}else{
 				$('#DOMWindowLoader').remove();
 				$('#DOMWindow').fadeIn('fast',function(){if(settings.functionCallOnOpen){settings.functionCallOnOpen();}});
 				$('#DOMWindow .closeDOMWindow').click(function(){						
-					$.closeDOMWindow();
+					$.closeDOMWindow(settings);
 					return false;
 				});
 			}
@@ -257,7 +247,7 @@
 					sizeOverlay();
 					var $DOMWindowOverlay = $('#DOMWindowOverlay');
 					$DOMWindowOverlay.fadeIn('fast');
-					if(!settings.modal){$DOMWindowOverlay.click(function(){$.closeDOMWindow();});}
+					if(!settings.modal){$DOMWindowOverlay.click(function(){$.closeDOMWindow(settings);});}
 				}
 				
 				//loader

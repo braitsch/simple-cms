@@ -26,16 +26,14 @@ function copyImage($img)
 function resizeImage($img, $width, $height)
 {
 	list($src_width, $src_height) = getimagesize($img);
-	// preserve aspect ratio //
-	if ($src_width > $src_height){
-	// landscape //	    
-        $ratio = $width / $src_width;
-        $height = $src_height * $ratio;
+// calc the smaller of the two aspect ratios //
+	if ($width/$src_width > $height/$src_height){
+	    $r = $height/$src_height;
 	}   else{
-	// portrait  //
-        $ratio = $height / $src_height;	    
-        $width = $src_width * $ratio;
-	}	
+	 	$r = $width/$src_width;
+	}
+	$width = $src_width * $r;
+	$height = $src_height * $r;	
 	$dup = imagecreatefromjpeg($img);	
 	$new = imagecreatetruecolor($width, $height);
 	imagecopyresampled($new, $dup, 0, 0, 0, 0, $width, $height, $src_width, $src_height);
