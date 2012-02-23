@@ -40,7 +40,7 @@ $(document).ready(function() {
 			data: {
 				type:'EDIT-PROJECT', id:pid, title:$("#title").val(), desc:$("#description").val()
 			},
-			success: function(projects) { buildNav(projects); }
+			success: function(projects) { buildNav(projects); alert('project updated!'); }
 		});
 		return false;
 	});	
