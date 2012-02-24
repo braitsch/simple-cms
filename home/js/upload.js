@@ -1,6 +1,9 @@
 var imgFileName;
 var win = {	width:680, height:340, overlayOpacity:'50'};
 
+proxy.addListener('IMAGE_PUBLISHED', onImagePublished);
+proxy.addListener('IMAGE_CANCELLED', onImageCancelled);
+
 $(document).ready(function(){
 	var options = {
 		dataType:       'json',	    
@@ -12,12 +15,16 @@ $(document).ready(function(){
 		$(this).ajaxSubmit(options);
 		return false;
 	});
-    $('input[type=file]').change(function(e){
+    $('input[type=file]').click(function(){	
+// force clear the file box on every image select //	
+		$(this).attr("value", "");
+	})	
+    $('input[type=file]').change(function(){
  	    $('#preview').fadeOut();
-   	    $('#my-form').ajaxSubmit(options);
-    });
-	$("#btn-cancel").click(onCancel);
-	$("#btn-publish").click(onPublish);
+   		$('#my-form').ajaxSubmit(options);		
+	})
+	$("#btn-cancel").click(cancelImage);
+	$("#btn-publish").click(publishImage);
 }); 
 
 function onRequest(formData, jqForm, options) { 
@@ -35,33 +42,33 @@ function onResponse(response, status, xhr, $form) {
     console.log('\nstatus: ' + status + '\nresponse: ' + response.name); 
 }
 
-function onCancel()
+function cancelImage()
 {
-	$.ajax({
-		type: "POST",
-		url: './php/cancel.php',
-		data: { file:imgFileName },
-		success: function(response){
-			if (response == 'ok') hideImageDetails();
-		}
-	});
-	console.log(imgFileName, 'removed from file system');
-	imgFileName = null;
+	proxy.cancelImageUpload(imgFileName);
 }
 
-function onPublish()
+function onImageCancelled(response)
 {
-	$.ajax({
-		type: "POST",
-		url: './php/query.php',
-		data: {
-			type:'PUBLISH-IMAGE', file:imgFileName, desc:$("#img-desc").val(), proj:pid
-		},
-		success: function(response){
-			$.closeDOMWindow();
-		}
-	});
+	hideImageDetails();
+	imgFileName = null;
+	console.log(response);	
+}
+
+function publishImage()
+{
+	proxy.publishImage(pid, imgFileName, $("#img-desc").val());
+}
+
+function onImagePublished(response)
+{
+	$.closeDOMWindow();
 	imgFileName = null;	
+	console.log(response);
+}
+
+function getImages()
+{
+	// todo //
 }
 
 function showImageDetails()
@@ -76,6 +83,7 @@ function hideImageDetails()
  	$('#preview').fadeOut();
  	$('#controls').fadeOut();
 }
+
 function showImageUploader()
 {
 	$("#add-img h2").html($("#title").val());
@@ -84,8 +92,18 @@ function showImageUploader()
 	var k = $(this).openDOMWindow(win);
  	$('#preview').hide(); $('#controls').hide(); $('#loader').hide();	
 }
+
 function onUploaderClosed()
 {
-// remove any orphaned images from the file system //	
-	if (imgFileName) onCancel();
+	console.log('onUploaderClosed');	
+	if (!imgFileName) return;
+	var matched = false;
+	$("#image-grid li img").each(function(i) {
+		var s = $(this).attr('src');
+	// check if loaded image is in the current project
+		s = s.substr(s.lastIndexOf('/') + 1);
+		if (s == imgFileName) matched = true;
+	});	
+	// otherwise remove the orphaned image from the file system //		
+	if (!matched) cancelImage();
 }

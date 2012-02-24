@@ -5,33 +5,39 @@ require_once('./globals.php');
 require_once('../../shared/db-connect.php');
 
 switch ($_REQUEST['type']) {
-    case 'LIST-PROJECTS':
+    case 'LIST_PROJECTS':
         getProjectList();
     break;
-    case 'LOAD-PROJECT':
+    case 'LOAD_PROJECT':
         loadProject();
     break;    
-    case 'SAVE-PROJECT':
+    case 'SAVE_PROJECT':
         saveNewProject();
     break;
-    case 'EDIT-PROJECT':
+    case 'EDIT_PROJECT':
         editProject();
     break;
-    case 'DELETE-PROJECT':
+    case 'DELETE_PROJECT':
         deleteProject();
     break;
-    case 'PUBLISH-IMAGE':
+    case 'PUBLISH_IMAGE':
         publishImage();
-    break;  
-    case 'DELETE-IMAGE':
-        echo 'meh';
-    break;                
+    break;
+    case 'EDIT_IMAGE':
+        editImage();
+    break; 
+    case 'CANCEL_IMAGE':
+        cancelImage();
+    break;    
+    case 'DELETE_IMAGE':
+        deleteImage();
+    break;                    
 }
 
 function getProjectList()
 {
     $r = mysql_query("SELECT * FROM `projects`");
-	while($row = mysql_fetch_array($r)) echo $row['title'].',';    
+	while($row = mysql_fetch_array($r)) echo $row['title'].',';
 }
 
 function saveNewProject()
@@ -59,7 +65,7 @@ function loadProject()
         }
         echo json_encode($o);
     }   else{
-        echo 'error -- project not found!';
+        echo 'ERROR -- PROJECT NOT FOUND!!';
     }
 }
 
@@ -77,14 +83,13 @@ function editProject()
 function deleteProject()
 {
     $id = $_REQUEST['id'];
-// delete all media associated with this project //    
+// delete all images associated with this project //    
     $r = mysql_query("SELECT file FROM media WHERE proj='$id'");
-    while($o = mysql_fetch_array($r)){
-        unlink('../'. IMG_SRC_DIR . '/' . $o['file']);
-        unlink('../'. IMG_TMB_DIR . '/' . $o['file']);            
-    }
+    while($o = mysql_fetch_array($r)) deleteFile($o['file']);
+// delete references in the database //    
     $r = mysql_query("DELETE FROM media WHERE proj='$id'");
-    $r = mysql_query("DELETE FROM projects WHERE id='$id'");    
+    $r = mysql_query("DELETE FROM projects WHERE id='$id'");
+// return the updated list of projects //        
     if ($r) {
         getProjectList();
     }   else{
@@ -92,24 +97,30 @@ function deleteProject()
     }   			
 }
 
+// image functions //
+
+function getImages()
+{
+    $id = $_REQUEST['id'];    
+    $r = mysql_query("SELECT file FROM media WHERE proj='$id'");
+	while($row = mysql_fetch_array($r)) echo $row['file'].',';
+}
+
 function publishImage()
 {
-    $file = $_REQUEST['file'];
-    $proj = $_REQUEST['proj'];
-// check if image already exists in the target project //    
+    $file = $_REQUEST['file']; $proj = $_REQUEST['proj'];
+// check if the image already exists in the target project //    
     if (mysql_num_rows(mysql_query("SELECT 1 FROM media WHERE file='$file' AND proj='$proj'")) == 0){
         addImage();
     }   else{
         editImage();
-    }    
+    }
 }
 
 function addImage()
 {
-    echo 'adding image';    
-    $desc = $_REQUEST['desc'];
-    $file = $_REQUEST['file'];
-    $proj = $_REQUEST['proj'];    
+    echo 'adding image';
+    $desc = $_REQUEST['desc']; $file = $_REQUEST['file']; $proj = $_REQUEST['proj'];    
     $r = mysql_query("INSERT INTO media (`file`, `desc`, `proj`) VALUES ('$file', '$desc', '$proj')");
     if ($r) {
         echo 'ok';
@@ -120,7 +131,7 @@ function addImage()
 
 function editImage()
 {
-    echo 'editing image';    
+    echo 'editing image';
     $desc = $_REQUEST['desc'];
     $file = $_REQUEST['file'];
     $proj = $_REQUEST['proj'];
@@ -132,4 +143,27 @@ function editImage()
     }      
 }
 
-?>
+function deleteImage()
+{
+    $r = mysql_query("DELETE FROM media WHERE file='$file' AND proj='$proj'");
+    if ($r) {
+        echo 'ok';
+    }   else{
+        echo mysql_error();
+    }       
+    deleteFile($_REQUEST['file']);
+}
+
+function cancelImage()
+{
+    deleteFile($_REQUEST['file']);
+}
+
+function deleteFile($f)
+{
+    echo 'deleting file ' . $f;
+    unlink('../' . IMG_SRC_DIR . '/' . $f);
+    unlink('../' . IMG_TMB_DIR . '/' . $f);
+}
+
+

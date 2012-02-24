@@ -126,6 +126,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     <script type="text/javascript" src="../vendor/jquery.DOMWindow.js"></script>    
     <script type="text/javascript" src="../vendor/jquery-ui-1.8.17.custom.min.js"></script>   
     <script type="text/javascript" src="../vendor/jquery.form.js"></script>
+    <script type="text/javascript" src="./js/proxy.js"></script>    
     <script type="text/javascript" src="./js/home.js"></script>
     <script type="text/javascript" src="./js/upload.js"></script>    
     </body>
