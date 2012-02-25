@@ -29,22 +29,22 @@ function onAddImageClick()
 
 function publishImage()
 {
-	proxy.publishImage(pid, imgFile, $("#img-desc").val());
+	proxy.publishImage(pid, imgName, $("#img-desc").val());
 }
 
 function cancelImage()
 {
-	proxy.cancelImageUpload(imgFile);
+	proxy.cancelImageUpload(imgName);
 }
 
 function editImage()
 {
-	proxy.editImage(pid, imgFile, $("#img-desc").val());
+	proxy.editImage(pid, imgName, $("#img-desc").val());
 }
 
 function deleteImage()
 {
-	proxy.editImage(pid, imgFile);
+	proxy.editImage(pid, imgName);
 }
 
 // callbacks //
@@ -56,10 +56,10 @@ function onImageUploadInit()
 
 function onImageUploadComplete(f)
 { 
+	setViewMode('PREVIEW');	
 	imgFile = './'+f;
-	imgName = imgFile.substr(imgFile.lastIndexOf('/') + 1);
+	imgName = getImageFileName();
 	setImageDetails();
-	setViewMode('PREVIEW');
 }
 
 function onImagePublished(response)
@@ -94,7 +94,7 @@ function onImageDetails(response)
 {
 	var k = $.parseJSON( response );
 	imgFile = './'+k['file']; 
-	imgName = imgFile.substr(imgFile.lastIndexOf('/') + 1);	
+	imgName = getImageFileName();
 	imgDesc = k['desc'];
 	setImageDetails(); openWindow();
  	$('#preview').show(); $('#controls').show(); $('#loader').hide();
@@ -102,9 +102,9 @@ function onImageDetails(response)
 
 function setImageDetails()
 {
-// truncate image file name if too long... //		
-	if (imgName.length > 22) imgName = '...'+imgName.substr(-22);
- 	$('#img-name').text(imgFile);
+// truncate image file name if too long... //
+	var name = (imgName.length <= 22) ? imgName : '...'+imgName.substr(-22);
+ 	$('#img-name').text(name);
 	$("#img-desc").val(imgDesc)	
  	$('#preview img').attr('src', imgFile);	
 }
@@ -115,6 +115,11 @@ function openWindow()
 	win.windowSourceID = '#add-img'; 
 	win.functionCallOnClose = onUploaderClosed;
 	$(this).openDOMWindow(win);	
+}
+
+function getImageFileName()
+{
+	return imgFile.substr(imgFile.lastIndexOf('/') + 1);
 }
 
 function setViewMode(s)
@@ -144,7 +149,6 @@ function onUploaderClosed()
 		var s = $(this).attr('src');
 	// check if loaded image is in the current project
 		if (s == imgFile) matched = true;
-		console.log(s, imgFile, matched);
 	});	
 	// otherwise remove the orphaned image from the file system //		
 	if (!matched) cancelImage();
