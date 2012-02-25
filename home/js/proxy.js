@@ -18,6 +18,14 @@ function Proxy()
 			success: function(response) { dispatch('PROJECT_SELECTED', response); }
 		});	
 	}
+	this.setProjectPositions = function(a)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'SORT_PROJECTS', data:a},
+			success: function(response) { console.log(response);}
+		});		
+	}	
 	this.addProject = function(t, d)
 	{
 		$.ajax({
@@ -58,6 +66,14 @@ function Proxy()
 			data: { type:'GET_IMAGE_DETAILS', proj:pid, file:f},
 			success: function(response) { dispatch('IMAGE_DETAILS', response);}
 		});
+	}	
+	this.setImagePositions = function(a)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'SORT_IMAGES', proj:pid, data:a},
+			success: function(response) { console.log(response);}
+		});		
 	}
 	this.publishImage = function(pid, f, d)
 	{

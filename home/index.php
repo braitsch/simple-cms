@@ -97,6 +97,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
             <div id="header">
                 <h2>Simple Image Uploader</h2>
                 <form id="my-form" enctype="multipart/form-data">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="100000"> 
                 <!-- The browse-img span is used to style the file input field as a button -->    
                     <span class="btn btn-primary browse-img">
                         <span><i class="icon-plus icon-white"></i>Select Image</span>

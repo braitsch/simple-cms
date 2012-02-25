@@ -1,7 +1,5 @@
 <?php
 
-// allow images larger than the default 8mbs 
-ini_set('memory_limit', '100M');
 require_once('./globals.php');
 
 // image file that was uploaded

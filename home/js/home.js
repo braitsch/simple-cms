@@ -8,11 +8,9 @@ $(document).ready(function() {
 	proxy.addListener('PROJECT_DELETED', onProjectDeleted);	
 	proxy.addListener('IMAGES_RECEIVED', onProjectImages);					
 
-	$("#media ul").sortable({
-	//	stop: function(e, o) { alert(o.position) }
-	});
+	$("#media ul").sortable({stop: function(e, o) { onImageSort() }});
 	$("#media ul").disableSelection();	
-	$("#project-list ul").sortable();
+	$("#project-list ul").sortable({stop: function(e, o) { onProjectSort() }});
 	$("#project-list ul").disableSelection();
 	$('.dom-window').click(function()  { onAddImageClick() });	
 	$("#btn-logout").click(function()  { window.location.replace("../logout");});
@@ -29,6 +27,25 @@ $(document).ready(function() {
 		}
 		return false;
 	});
+	
+	function onImageSort()
+	{
+		var a = [];
+		$("#media ul li img").each(function(i, o){
+			f = $(o).attr('src');
+			a.push({id:i+1, file:f.substr(f.lastIndexOf('/') + 1)});
+		})
+		proxy.setImagePositions(a);
+	}
+	
+	function onProjectSort()
+	{
+		var a = [];
+		$("#project-list ul li").each(function(i, o){
+			a.push({pos:i+1, title:$(o).text()});
+		})
+		proxy.setProjectPositions(a);
+	}	
 	
 	$("#project-update").click(function() {
 		proxy.updateProject(pid, $("#title").val(), $("#description").val());

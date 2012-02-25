@@ -8,6 +8,9 @@ switch ($_REQUEST['type']) {
     case 'GET_PROJECT_LIST':
         getProjectList();
     break;
+    case 'SORT_PROJECTS':
+        setProjectPositions();
+    break;    
     case 'GET_PROJECT_DETAILS':
         getProjectDetails();
     break;    
@@ -23,12 +26,15 @@ switch ($_REQUEST['type']) {
     case 'GET_PROJECT_IMAGES':
         getProjectImages();
     break;
+    case 'SORT_IMAGES':
+        setImagePositions();
+    break;    
     case 'GET_IMAGE_DETAILS':
         getImageDetails();
-    break;         
+    break;
     case 'PUBLISH_IMAGE':
         publishImage();
-    break;
+    break;    
     case 'EDIT_IMAGE':
         editImage();
     break; 
@@ -42,19 +48,18 @@ switch ($_REQUEST['type']) {
 
 function getProjectList()
 {
-    $r = mysql_query("SELECT * FROM `projects`");
+    $r = mysql_query("SELECT * FROM `projects` ORDER BY `pos`");
 	while($row = mysql_fetch_array($r)) echo $row['title'].',';
 }
 
-function addProject()
+function setProjectPositions()
 {
-    $title = $_REQUEST['title']; $desc = $_REQUEST['desc'];    
-    $r = mysql_query("INSERT INTO projects (`title`, `desc`) VALUES ('$title', '$desc')");
-    if ($r) {
-        getProjectList();
-    }   else{
-        echo mysql_error();
-    }  
+    $arr = $_REQUEST['data'];
+    foreach ($arr as &$obj) {
+        $p = $obj['pos']; $t = $obj['title'];
+        $r = mysql_query("UPDATE `projects` SET `pos`='$p' WHERE title='$t'");
+        if (!$r) echo mysql_error();
+    }
 }
 
 function getProjectDetails()
@@ -66,6 +71,17 @@ function getProjectDetails()
     }   else{
         echo 'ERROR -- PROJECT NOT FOUND!!';
     }
+}
+
+function addProject()
+{
+    $title = $_REQUEST['title']; $desc = $_REQUEST['desc'];    
+    $r = mysql_query("INSERT INTO projects (`title`, `desc`) VALUES ('$title', '$desc')");
+    if ($r) {
+        getProjectList();
+    }   else{
+        echo mysql_error();
+    }  
 }
 
 function editProject()
@@ -101,11 +117,21 @@ function deleteProject()
 function getProjectImages()
 {
     $proj = $_REQUEST['proj']; $imgs = array();
-    $r = mysql_query("SELECT file FROM media WHERE proj='$proj'");
+    $r = mysql_query("SELECT file FROM media WHERE proj='$proj' ORDER BY `pos`");
     if (mysql_num_rows($r)){             
         while($img = mysql_fetch_array($r)) array_push($imgs, $img);
     }
     echo json_encode($imgs);
+}
+
+function setImagePositions()
+{
+    $proj = $_REQUEST['proj']; $arr = $_REQUEST['data'];  
+    foreach ($arr as &$obj) {
+        $p = $obj['id']; $f = $obj['file'];
+        $r = mysql_query("UPDATE `media` SET `pos`='$p' WHERE file='$f' AND proj='$proj'");
+        if (!$r) echo mysql_error();
+    }
 }
 
 function getImageDetails()

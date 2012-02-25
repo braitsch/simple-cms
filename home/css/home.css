@@ -3,7 +3,7 @@ body {
 	padding-top:60px; background-color:#eee;
 }
 #wrapper{
-	height:500px; overflow:hidden;
+	overflow:hidden; margin-bottom:50px;
 }
 #btn-logout{
 	float:right; margin-top:6px;
@@ -39,7 +39,8 @@ textarea { resize: none; padding:5px; margin:0;}
 	margin-top:7px;
 }
 #image-grid{
-	padding:0; margin:0; overflow:hidden; height:354px; 
+	padding:0; margin:0; overflow:hidden; 
+    min-height:354px; height:auto !important; height:354px; 
 }
 
 #image-grid li{

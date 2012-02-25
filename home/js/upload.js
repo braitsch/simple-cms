@@ -21,7 +21,7 @@ function ImageUploader(form, select)
 	}	
 	
 	function onResponse(response, status, xhr, $form)
-	{		
+	{
 		dispatch('UPLOAD_COMPLETE', [response.file]);
 	}
 
