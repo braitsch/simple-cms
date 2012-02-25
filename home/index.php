@@ -114,7 +114,9 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                     <div class="input"><textarea id='img-desc'></textarea></div> 
                 </div>
             </div>
-            <div id='controls' style='display:none;'>
+            <div id='controls'>
+                <button id='btn-delete' class="btn btn-danger"><i class="icon-trash icon-white"></i>Delete</button>
+                <button id='btn-update' class="btn btn-success"><i class="icon-ok icon-white"></i>Update</button>                
                 <button id='btn-cancel' class="btn btn-warning"><i class="icon-ban-circle icon-white"></i>Cancel</button>
                 <button id='btn-publish' class="btn btn-success"><i class="icon-upload icon-white"></i>Publish</button>
             </div>

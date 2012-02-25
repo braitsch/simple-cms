@@ -67,7 +67,7 @@ function Proxy()
 			success: function(response) { dispatch('IMAGE_PUBLISHED', response);}
 		});
 	}
-	this.editImage = function(pid, f, d)
+	this.updateImage = function(pid, f, d)
 	{
 		$.ajax({
 			type: "POST", url: query,

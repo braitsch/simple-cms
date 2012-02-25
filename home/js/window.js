@@ -1,11 +1,11 @@
 var imgName, imgFile, imgDesc;
 var win = {	width:680, height:340, overlayOpacity:'50'};
 
+proxy.addListener('IMAGE_DETAILS', onImageDetails);
 proxy.addListener('IMAGE_PUBLISHED', onImagePublished);
 proxy.addListener('IMAGE_EDITED', onImageEdited);
-proxy.addListener('IMAGE_DETAILS', onImageDetails);
+proxy.addListener('IMAGE_DELETED', onImageDeleted);
 proxy.addListener('IMAGE_CANCELLED', onImageCancelled);
-//proxy.addListener('IMAGE_DELETED', onImageDeleted);
 
 $(document).ready(function(){
 	var ldr = new ImageUploader($('#my-form'), $('input[type=file]'));
@@ -13,16 +13,15 @@ $(document).ready(function(){
 		ldr.addListener('UPLOAD_COMPLETE', onImageUploadComplete);
 	$("#btn-publish").click(publishImage);
 	$("#btn-cancel").click(cancelImage);	
-	// $("#btn-edit").click(editImage);
-	// $("#btn-delete").click(deleteImage);	
+	$("#btn-update").click(updateImage);
+	$("#btn-delete").click(deleteImage);	
 }); 
 
 // public methods //
 
 function onAddImageClick()
 {
-	openWindow();
- 	$('#preview').hide(); $('#controls').hide(); $('#loader').hide();	
+	openWindow(); setViewMode('RESET');
 }
 
 // private proxy methods //
@@ -37,14 +36,16 @@ function cancelImage()
 	proxy.cancelImageUpload(imgName);
 }
 
-function editImage()
+function updateImage()
 {
-	proxy.editImage(pid, imgName, $("#img-desc").val());
+	console.log('update');
+	proxy.updateImage(pid, imgName, $("#img-desc").val());
 }
 
 function deleteImage()
 {
-	proxy.editImage(pid, imgName);
+	var k = confirm('Are you sure you want to delete this image?');
+	if (k == true) proxy.deleteImage(pid, imgName);
 }
 
 // callbacks //
@@ -75,12 +76,20 @@ function onImagePublished(response)
 
 function onImageEdited(response)
 {
-	imgFile = null;
+	imgFile = null;		
 	if (response == 'ok') {
-		alert('image updated.');
+		alert('image updated!');
 	}	else{
 		console.log(response);
 	}
+	$.closeDOMWindow();	
+}
+
+function onImageDeleted(response)
+{
+	imgFile = null;
+	$.closeDOMWindow();
+	proxy.getProjectImages(pid);	
 }
 
 function onImageCancelled(response)
@@ -96,8 +105,8 @@ function onImageDetails(response)
 	imgFile = './'+k['file']; 
 	imgName = getImageFileName();
 	imgDesc = k['desc'];
-	setImageDetails(); openWindow();
- 	$('#preview').show(); $('#controls').show(); $('#loader').hide();
+	setImageDetails();	
+	openWindow(); setViewMode('EDITING');
 }
 
 function setImageDetails()
@@ -112,7 +121,7 @@ function setImageDetails()
 function openWindow()
 {
 	$("#add-img h2").html($("#title").val());
-	win.windowSourceID = '#add-img'; 
+	win.windowSourceID = '#add-img'; 	
 	win.functionCallOnClose = onUploaderClosed;
 	$(this).openDOMWindow(win);	
 }
@@ -125,24 +134,29 @@ function getImageFileName()
 function setViewMode(s)
 {
 	switch(s){
-		case 'RESET' :
-	 		$('#loader').fadeOut();	$('#preview').fadeOut(); $('#controls').fadeOut();
-		break;		
+		case 'EDITING' :		
+	 		$('#my-form').hide(); $('#loader').hide(); $('#preview').show();
+			$('#btn-delete').show(); $('#btn-update').show(); $('#btn-cancel').hide(); $('#btn-publish').hide();	
+		break;				
 		case 'LOADING' :
-	 		$('#loader').fadeIn(); $('#preview').fadeOut(); $('#controls').fadeOut();		
+	 		$('#my-form').hide(); $('#loader').fadeIn(); $('#preview').fadeOut();
+			$('#btn-delete').hide(); $('#btn-update').hide(); $('#btn-cancel').hide(); $('#btn-publish').hide();	
 		break;
 		case 'PREVIEW' :
-	 		$('#loader').fadeOut();	$('#preview').fadeIn(); $('#controls').fadeIn();		
+	 		$('#my-form').hide(); $('#loader').fadeOut(); $('#preview').fadeIn();
+			$('#btn-delete').hide(); $('#btn-update').hide(); $('#btn-cancel').fadeIn(); $('#btn-publish').fadeIn();	
 		break;
-		case 'EDITING' :
-	 		$('#loader').fadeOut();	$('#preview').fadeIn(); $('#controls').fadeIn();		
-		break;				
+		case 'RESET' :
+		 	$('#preview img').attr('src', ''); $('#img-desc').val(''); imgDesc = '';
+	 		$('#my-form').fadeIn(); $('#loader').fadeOut(); $('#preview').fadeOut();
+			$('#btn-delete').fadeOut(); $('#btn-update').fadeOut(); $('#btn-cancel').fadeOut(); $('#btn-publish').fadeOut();
+		break;
 	}
 }
 
 function onUploaderClosed()
 {
-	console.log('onUploaderClosed');	
+	setViewMode('RESET');
 	if (!imgFile) return;
 	var matched = false;
 	$("#image-grid li img").each(function(i) {

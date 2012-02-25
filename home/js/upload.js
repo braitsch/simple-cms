@@ -8,24 +8,20 @@ function ImageUploader(form, select)
 		success:        onResponse
 	};
 // force clear the file box on every image select //	
-	select.click(function(){	
-			console.log('click');		
+	select.click(function(){		
 		$(this).attr("value", "");
 	})	
 	select.change(function(){
-		console.log('change');
 		form.ajaxSubmit(options);
 	})
 	
 	function onRequest(formData, jqForm, options)
 	{
-		console.log('onRequest');
 		dispatch('UPLOAD_INIT');
 	}	
 	
 	function onResponse(response, status, xhr, $form)
-	{
-		console.log('response');		
+	{		
 		dispatch('UPLOAD_COMPLETE', [response.file]);
 	}
 
