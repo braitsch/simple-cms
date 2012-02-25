@@ -2,9 +2,11 @@
 function ImageUploader(form, select)
 {
 	var options = {
-		dataType:       'json',	    
+		type: 			'POST',
+		dataType:       'json',
 		url:            './php/upload.php',
 		beforeSubmit:   onRequest,
+		error: 			onError,
 		success:        onResponse
 	};
 // force clear the file box on every image select //	
@@ -18,10 +20,16 @@ function ImageUploader(form, select)
 	function onRequest(formData, jqForm, options)
 	{
 		dispatch('UPLOAD_INIT');
+	}
+	
+	function onError(jqXHR, textStatus, errorThrown)
+	{
+		console.log('error', jqXHR, textStatus, errorThrown);
 	}	
 	
 	function onResponse(response, status, xhr, $form)
 	{
+	//	console.log('onResponse', response, status);
 		dispatch('UPLOAD_COMPLETE', [response.file]);
 	}
 
