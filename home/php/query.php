@@ -5,14 +5,14 @@ require_once('./globals.php');
 require_once('../../shared/db-connect.php');
 
 switch ($_REQUEST['type']) {
-    case 'LIST_PROJECTS':
+    case 'GET_PROJECT_LIST':
         getProjectList();
     break;
-    case 'LOAD_PROJECT':
-        loadProject();
+    case 'GET_PROJECT_DETAILS':
+        getProjectDetails();
     break;    
-    case 'SAVE_PROJECT':
-        saveNewProject();
+    case 'ADD_PROJECT':
+        addProject();
     break;
     case 'EDIT_PROJECT':
         editProject();
@@ -20,18 +20,24 @@ switch ($_REQUEST['type']) {
     case 'DELETE_PROJECT':
         deleteProject();
     break;
+    case 'GET_PROJECT_IMAGES':
+        getProjectImages();
+    break;
+    case 'GET_IMAGE_DETAILS':
+        getImageDetails();
+    break;         
     case 'PUBLISH_IMAGE':
         publishImage();
     break;
     case 'EDIT_IMAGE':
         editImage();
     break; 
-    case 'CANCEL_IMAGE':
-        cancelImage();
-    break;    
     case 'DELETE_IMAGE':
         deleteImage();
-    break;                    
+    break;
+    case 'CANCEL_IMAGE':
+        cancelImage();
+    break;                     
 }
 
 function getProjectList()
@@ -40,7 +46,7 @@ function getProjectList()
 	while($row = mysql_fetch_array($r)) echo $row['title'].',';
 }
 
-function saveNewProject()
+function addProject()
 {
     $title = $_REQUEST['title']; $desc = $_REQUEST['desc'];    
     $r = mysql_query("INSERT INTO projects (`title`, `desc`) VALUES ('$title', '$desc')");
@@ -51,19 +57,12 @@ function saveNewProject()
     }  
 }
 
-function loadProject()
+function getProjectDetails()
 {
     $title = $_REQUEST['title'];
     $r = mysql_query("SELECT * FROM projects WHERE title='$title'");
-    if (mysql_num_rows($r)){
-        $o = mysql_fetch_array($r); $proj = $o['id'];
-        $r = mysql_query("SELECT `file`, `desc` FROM media WHERE proj='$proj'");
-        if (mysql_num_rows($r)){
-    // append the thumbs onto the project object //             
-            $o['images'] = array();
-            while($img = mysql_fetch_array($r)) array_push($o['images'], $img);
-        }
-        echo json_encode($o);
+    if ($r){
+        echo json_encode(mysql_fetch_array($r));
     }   else{
         echo 'ERROR -- PROJECT NOT FOUND!!';
     }
@@ -99,16 +98,32 @@ function deleteProject()
 
 // image functions //
 
-function getImages()
+function getProjectImages()
 {
-    $id = $_REQUEST['id'];    
-    $r = mysql_query("SELECT file FROM media WHERE proj='$id'");
-	while($row = mysql_fetch_array($r)) echo $row['file'].',';
+    $proj = $_REQUEST['proj']; $imgs = array();
+    $r = mysql_query("SELECT file FROM media WHERE proj='$proj'");
+    if (mysql_num_rows($r)){             
+        while($img = mysql_fetch_array($r)) array_push($imgs, $img);
+    }
+    echo json_encode($imgs);
+}
+
+function getImageDetails()
+{
+    $proj = $_REQUEST['proj']; $file = $_REQUEST['file'];
+    $r = mysql_query("SELECT * FROM media WHERE file='$file' AND proj='$proj'");
+    if ($r) {
+        $o = mysql_fetch_array($r);
+        $o['file'] = IMG_TMB_DIR . '/' . $o['file'];
+        echo json_encode($o); 
+    }   else{
+        echo mysql_error();
+    }     
 }
 
 function publishImage()
 {
-    $file = $_REQUEST['file']; $proj = $_REQUEST['proj'];
+   $proj = $_REQUEST['proj']; $file = $_REQUEST['file'];
 // check if the image already exists in the target project //    
     if (mysql_num_rows(mysql_query("SELECT 1 FROM media WHERE file='$file' AND proj='$proj'")) == 0){
         addImage();
@@ -119,8 +134,7 @@ function publishImage()
 
 function addImage()
 {
-    echo 'adding image';
-    $desc = $_REQUEST['desc']; $file = $_REQUEST['file']; $proj = $_REQUEST['proj'];    
+    $proj = $_REQUEST['proj']; $file = $_REQUEST['file']; $desc = $_REQUEST['desc'];
     $r = mysql_query("INSERT INTO media (`file`, `desc`, `proj`) VALUES ('$file', '$desc', '$proj')");
     if ($r) {
         echo 'ok';
@@ -131,10 +145,7 @@ function addImage()
 
 function editImage()
 {
-    echo 'editing image';
-    $desc = $_REQUEST['desc'];
-    $file = $_REQUEST['file'];
-    $proj = $_REQUEST['proj'];
+    $proj = $_REQUEST['proj']; $file = $_REQUEST['file']; $desc = $_REQUEST['desc'];
     $r = mysql_query("UPDATE `media` SET `desc`='$desc' WHERE file='$file' AND proj='$proj'");      
     if ($r) {
         echo 'ok';
@@ -145,6 +156,7 @@ function editImage()
 
 function deleteImage()
 {
+    $proj = $_REQUEST['proj']; $file = $_REQUEST['file'];    
     $r = mysql_query("DELETE FROM media WHERE file='$file' AND proj='$proj'");
     if ($r) {
         echo 'ok';

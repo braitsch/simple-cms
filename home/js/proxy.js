@@ -6,15 +6,15 @@ function Proxy()
 	{
 		$.ajax({
 			type: "POST", url: query,
-			data: { type:'LIST_PROJECTS' },
+			data: { type:'GET_PROJECT_LIST' },
 			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
 		});
 	}
-	this.loadProject = function(pName)
+	this.getProjectDetails = function(pName)
 	{
 		$.ajax({
 			type: "POST", url: query,
-			data: { type:'LOAD_PROJECT', title : pName },
+			data: { type:'GET_PROJECT_DETAILS', title : pName },
 			success: function(response) { dispatch('PROJECT_SELECTED', response); }
 		});	
 	}
@@ -22,7 +22,7 @@ function Proxy()
 	{
 		$.ajax({
 			type: "POST", url: query,
-			data: { type:'SAVE_PROJECT', title:t, desc:d },
+			data: { type:'ADD_PROJECT', title:t, desc:d },
 			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
 		});		
 	}
@@ -36,7 +36,6 @@ function Proxy()
 	}	
 	this.deleteProject = function(pid)
 	{
-		console.log('deleting project # '+pid);		
 		$.ajax({
 			type: "POST", url: query,
 			data: { type:'DELETE_PROJECT', id:pid },
@@ -44,14 +43,46 @@ function Proxy()
 		});		
 	}
 // images & video //
+	this.getProjectImages = function(pid)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'GET_PROJECT_IMAGES', proj:pid},
+			success: function(imgs) { dispatch('IMAGES_RECEIVED', imgs);}
+		});
+	}
+	this.getImageDetails = function(pid, f)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'GET_IMAGE_DETAILS', proj:pid, file:f},
+			success: function(response) { dispatch('IMAGE_DETAILS', response);}
+		});
+	}
 	this.publishImage = function(pid, f, d)
 	{
 		$.ajax({
 			type: "POST", url: query,
 			data: { type:'PUBLISH_IMAGE', proj:pid, file:f, desc:d},
-			success: function(projects) { dispatch('IMAGE_PUBLISHED', projects);}
+			success: function(response) { dispatch('IMAGE_PUBLISHED', response);}
 		});
 	}
+	this.editImage = function(pid, f, d)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'EDIT_IMAGE', proj:pid, file:f, desc:d},
+			success: function(response) { dispatch('IMAGE_EDITED', response);}
+		});
+	}	
+	this.deleteImage = function(pid, f)
+	{
+		$.ajax({
+			type: "POST", url: query,
+			data: { type:'DELETE_IMAGE', proj:pid, file:f},
+			success: function(response) { dispatch('IMAGE_DELETED', response);}
+		});
+	}	
 	this.cancelImageUpload = function(f)
 	{
 		$.ajax({

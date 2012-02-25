@@ -1,12 +1,12 @@
 var pid;
-var query = './php/query.php';
 var proxy = new Proxy();
 
 $(document).ready(function() {
 
-	proxy.addListener('PROJECTS_LOADED', buildProjectList);
+	proxy.addListener('PROJECTS_LOADED', buildProjectList);	
 	proxy.addListener('PROJECT_SELECTED', displayProject);
-	proxy.addListener('PROJECT_DELETED', onProjectDeleted);		
+	proxy.addListener('PROJECT_DELETED', onProjectDeleted);	
+	proxy.addListener('IMAGES_RECEIVED', onProjectImages);					
 
 	$("#media ul").sortable({
 	//	stop: function(e, o) { alert(o.position) }
@@ -14,7 +14,7 @@ $(document).ready(function() {
 	$("#media ul").disableSelection();	
 	$("#project-list ul").sortable();
 	$("#project-list ul").disableSelection();
-	$('.dom-window').click(function()  { showImageUploader() });	
+	$('.dom-window').click(function()  { onAddImageClick() });	
 	$("#btn-logout").click(function()  { window.location.replace("../logout");});
 	$("#main-nav li").click(function() { onGlobalNavClick($(this))});	
 	$("#new-project").click(function() { showNewProjectTemplate(); });
@@ -46,22 +46,34 @@ $(document).ready(function() {
 		var a = projects.split(',');
 		$("#project-list ul").empty();
 		for (var i=0; i < a.length - 1; i++) $("#project-list ul").append("<li class='ui-state-default'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span>"+ a[i] +"</li>");
-		$("#project-list li").click(function() { proxy.loadProject($(this).text()); });
+		$("#project-list li").click(function() { proxy.getProjectDetails($(this).text()); });
 	}
 	
 	function displayProject(response)
 	{
-		var k = eval("(" + response + ")");				
+		var k = $.parseJSON( response );
 		pid = k['id'];
 		$("#title").val(k['title']);
 		$("#description").val(k['desc']);
 		$("#content h2").html(k['title']);
-		if (k['images']){
-			$.each(k['images'], function(i, o) {
-				$("#image-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
-  			});					
+		showProjectDetails();
+		proxy.getProjectImages(pid);
+	}
+	
+	function onProjectImages(imgs)
+	{
+		$("#image-grid").empty();		
+		var imgs = $.parseJSON( imgs );
+		if (imgs){
+			$.each(imgs, function(i, o) {
+				var k = $("#image-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
+	  		});
+			$('#image-grid li img').each(function(i, o) {
+				var s = $(o).attr('src'); s = s.substr(s.lastIndexOf('/') + 1);
+				$(o).click(function(){ proxy.getImageDetails(pid, s)});
+				$(o).hide(); $(o).delay(i * 100).fadeIn();				
+			});
 		}
-		showProjectDetails();		
 	}
 	
 	function onProjectDeleted(projects)
@@ -74,7 +86,6 @@ $(document).ready(function() {
 	function showProjectDetails()
 	{
 		$("#media").show();
-		$("#image-grid").empty();	
 		$("#project-save").hide();
 		$("#project-update").show();
 		$("#project-delete").show();			
