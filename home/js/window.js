@@ -9,8 +9,8 @@ proxy.addListener('IMAGE_CANCELLED', onImageCancelled);
 
 $(document).ready(function(){
 	var ldr = new ImageUploader($('#my-form'), $('input[type=file]'));
-		ldr.addListener('UPLOAD_INIT', onImageUploadInit);
-		ldr.addListener('UPLOAD_COMPLETE', onImageUploadComplete);
+	ldr.addListener('UPLOAD_INIT', onImageUploadInit);
+	ldr.addListener('UPLOAD_COMPLETE', onImageUploadComplete);
 	$("#btn-publish").click(publishImage);
 	$("#btn-cancel").click(cancelImage);	
 	$("#btn-update").click(updateImage);
@@ -126,6 +126,12 @@ function openWindow()
 	$(this).openDOMWindow(win);	
 }
 
+function onUploaderClosed()
+{
+	setViewMode('RESET');
+	if (imgFile) cancelImage();
+}
+
 function getImageFileName()
 {
 	return imgFile.substr(imgFile.lastIndexOf('/') + 1);
@@ -152,18 +158,4 @@ function setViewMode(s)
 			$('#btn-delete').fadeOut(); $('#btn-update').fadeOut(); $('#btn-cancel').fadeOut(); $('#btn-publish').fadeOut();
 		break;
 	}
-}
-
-function onUploaderClosed()
-{
-	setViewMode('RESET');
-	if (!imgFile) return;
-	var matched = false;
-	$("#image-grid li img").each(function(i) {
-		var s = $(this).attr('src');
-	// check if loaded image is in the current project
-		if (s == imgFile) matched = true;
-	});	
-	// otherwise remove the orphaned image from the file system //		
-	if (!matched) cancelImage();
 }

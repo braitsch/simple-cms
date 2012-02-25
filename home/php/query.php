@@ -182,7 +182,7 @@ function editImage()
 
 function deleteImage()
 {
-    $proj = $_REQUEST['proj']; $file = $_REQUEST['file'];    
+    $proj = $_REQUEST['proj']; $file = $_REQUEST['file'];
     $r = mysql_query("DELETE FROM media WHERE file='$file' AND proj='$proj'");
     if ($r) {
         echo 'ok';
@@ -194,7 +194,9 @@ function deleteImage()
 
 function cancelImage()
 {
-    deleteFile($_REQUEST['file']);
+    $file = $_REQUEST['file'];
+    $r = mysql_query("SELECT * FROM media WHERE file='$file'");
+    if (mysql_num_rows($r) == 0) deleteFile($file);
 }
 
 function deleteFile($f)
