@@ -49,7 +49,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
 
         <div id='wrapper'>
             <div id="project-list">
-                <button class="btn btn-success" id='new-project'><i class="icon-pencil icon-white"></i>New Project</button>  
+                <button class="btn btn-success" id='project-new'><i class="icon-pencil icon-white"></i>New Project</button>  
                 <form class="form-stacked" id='project-label'><label>My Projects</label></form>                    
                 <ul id="sortable"></ul>
             </div>
@@ -73,7 +73,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                         <div class="form-btns">
                             <button class="btn btn-primary" id='project-save'><i class="icon-ok icon-white"></i>Save Project</button>
                             <button class="btn btn-danger" id='project-delete'><i class="icon-remove-circle icon-white"></i>Delete</button>
-                            <button class="btn btn-primary" id='project-update'><i class="icon-ok-circle icon-white"></i>Update</button>
+                            <button class="btn btn-primary" id='project-edit'><i class="icon-ok-circle icon-white"></i>Update</button>
                         </div>
                     </div><!-- /clearfix -->
                     </fieldset>
@@ -86,8 +86,8 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
                 <div id='media-btns'>      
                     <hr>                            
                     <div class="form-btns"> 
-                        <button class="btn btn-primary"><a href="#add-img" class="dom-window"><i class="icon-plus icon-white"></i>Add Image</a></button>
-                        <button class="btn btn-primary"><a href="#add-vid" class="dom-window"><i class="icon-plus icon-white"></i>Add Video</a></button>
+                        <button id='add-image' class="btn btn-primary"><a href="#add-img" class="dom-window"><i class="icon-plus icon-white"></i>Add Image</a></button>
+                        <button id='add-video' class="btn btn-primary"><a href="#add-vid" class="dom-window"><i class="icon-plus icon-white"></i>Add Video</a></button>
                     </div>
                 </div>
             </div> <!-- end media -->
@@ -130,6 +130,7 @@ $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
     <script type="text/javascript" src="../vendor/jquery.form.js"></script>
     <script type="text/javascript" src="./js/proxy.js"></script>    
     <script type="text/javascript" src="./js/home.js"></script>
+    <script type="text/javascript" src="./js/projects.js"></script>    
     <script type="text/javascript" src="./js/window.js"></script>    
     <script type="text/javascript" src="./js/upload.js"></script>    
     </body>
