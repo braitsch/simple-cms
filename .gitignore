@@ -1,4 +1,4 @@
 .DS_Store
 home/files/src/*
 home/files/tmb/*
-shared/*
+shared/db-connect.php
