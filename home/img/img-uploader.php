@@ -1,6 +1,6 @@
 <?php
 
-require_once('./globals.php');
+require_once('../../shared/globals.php');
 
 // image file that was uploaded
 $src_img = $_FILES['file']['tmp_name'];

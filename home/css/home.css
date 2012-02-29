@@ -2,7 +2,7 @@
 body {
 	padding-top:60px; background-color:#eee;
 }
-#wrapper{
+.page-wrapper{
 	overflow:hidden; margin-bottom:50px;
 }
 #btn-logout{

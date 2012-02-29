@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-require_once('./globals.php');
+require_once('../../shared/globals.php');
 require_once('../../shared/db-connect.php');
 
 switch ($_REQUEST['type']) {

@@ -4,7 +4,7 @@ function ImageUploader(form, select)
 	var options = {
 		type: 			'POST',
 		dataType:       'json',
-		url:            './php/upload.php',
+		url:            './img/img-uploader.php',
 		beforeSubmit:   onRequest,
 		error: 			onError,
 		success:        onResponse

@@ -1,11 +1,11 @@
 
-var query = './php/query.php';
+var php_script = './proxies/db-proxy.php';
 function Proxy()
 {
 	this.getProjects = function()
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'GET_PROJECT_LIST' },
 			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
 		});
@@ -13,7 +13,7 @@ function Proxy()
 	this.getProjectDetails = function(pName)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'GET_PROJECT_DETAILS', title : pName },
 			success: function(response) { dispatch('PROJECT_SELECTED', response); }
 		});	
@@ -21,7 +21,7 @@ function Proxy()
 	this.setProjectPositions = function(a)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'SORT_PROJECTS', data:a},
 			success: function(response) { console.log(response);}
 		});		
@@ -29,7 +29,7 @@ function Proxy()
 	this.addProject = function(t, d)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'ADD_PROJECT', title:t, desc:d },
 			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
 		});		
@@ -37,7 +37,7 @@ function Proxy()
 	this.updateProject = function(pid, t, d)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'EDIT_PROJECT', id:pid, title:t, desc:d },
 			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
 		});		
@@ -45,7 +45,7 @@ function Proxy()
 	this.deleteProject = function(pid)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'DELETE_PROJECT', id:pid },
 			success: function(projects) { dispatch('PROJECT_DELETED', projects);}
 		});		
@@ -54,7 +54,7 @@ function Proxy()
 	this.getProjectImages = function(pid)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'GET_PROJECT_IMAGES', proj:pid},
 			success: function(imgs) { dispatch('IMAGES_RECEIVED', imgs);}
 		});
@@ -62,7 +62,7 @@ function Proxy()
 	this.getImageDetails = function(pid, f)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'GET_IMAGE_DETAILS', proj:pid, file:f},
 			success: function(response) { dispatch('IMAGE_DETAILS', response);}
 		});
@@ -70,7 +70,7 @@ function Proxy()
 	this.setImagePositions = function(a)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'SORT_IMAGES', proj:pid, data:a},
 			success: function(response) { console.log(response);}
 		});		
@@ -78,7 +78,7 @@ function Proxy()
 	this.publishImage = function(pid, f, d)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'PUBLISH_IMAGE', proj:pid, file:f, desc:d},
 			success: function(response) { dispatch('IMAGE_PUBLISHED', response);}
 		});
@@ -86,7 +86,7 @@ function Proxy()
 	this.updateImage = function(pid, f, d)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'EDIT_IMAGE', proj:pid, file:f, desc:d},
 			success: function(response) { dispatch('IMAGE_EDITED', response);}
 		});
@@ -94,7 +94,7 @@ function Proxy()
 	this.deleteImage = function(pid, f)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 			data: { type:'DELETE_IMAGE', proj:pid, file:f},
 			success: function(response) { dispatch('IMAGE_DELETED', response);}
 		});
@@ -102,7 +102,7 @@ function Proxy()
 	this.cancelImageUpload = function(f)
 	{
 		$.ajax({
-			type: "POST", url: query,
+			type: "POST", url: php_script,
 		    data: { type:'CANCEL_IMAGE', file:f },
 			success: function(response) { dispatch('IMAGE_CANCELLED', response);}
 		});		
