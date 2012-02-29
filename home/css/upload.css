@@ -1,8 +1,7 @@
 @charset 'UTF-8';
 
 #header{
-	margin:20px 20px 20px 30px;
-	height:40px;
+	margin:20px 20px 20px 30px; height:40px;
 }
 #header h2{
 	float:left;
@@ -22,37 +21,37 @@
   cursor: pointer;
   position: absolute; top: 0; right: 0; margin: 0;
 }
-#loader{
+#loader {
 	width:208px;
 	height:13px;
 	position:absolute;
 	left:40px; top:120px;
 	background:url('../img/img-uploader.gif') no-repeat;	
 }
-#preview {
+#img-preview {
 	padding:10px 10px 10px 20px;	
 	margin-left:20px;
 	width:606px;
 	height:160px;
 	border:1px solid grey;
 }
-#preview .details{
+#img-details {
 	float:left;
 	margin-right:10px;
 }
-#preview .details .img{
+#img-container {
 	width:160px;
 	height:120px;	
 	border:1px solid #ccc;	
 }
-#preview textarea {
+#img-description textarea {
 	width:412px; 
 	height:110px;	
 }
 
 #controls{
 	float:right;
-	margin:10px 20px 0 0;
+	margin:16px 22px 0 0;
 }
 button i, .browse-img i{
 	padding-right:5px;

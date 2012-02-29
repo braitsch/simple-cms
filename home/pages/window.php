@@ -9,21 +9,22 @@
             </span>
         </form>
     </div>
-    <div id='loader' style='display:none;'></div>            
-    <div id='preview' style='display:none;'>
-        <div class='details'>
-            <label id='img-name'>File Name</label><div class='img'><img style='display:block; margin:auto'src='' /></div>
+    <div id='loader' style='display:none;'></div> 
+    <div id='img-preview' style='display:none;'>
+        <div id='img-details'>
+            <label id='img-name'>File Name</label>
+            <div id='img-container'><img style='display:block; margin:auto' src='' /></div>
         </div>
-        <div class='description'>
+        <div id='img-description'>
             <label for="textarea">Add An Optional Description</label>
-            <div class="input"><textarea id='img-desc'></textarea></div> 
+            <textarea></textarea>
         </div>
     </div>
     <div id='controls'>
-        <button id='btn-delete' class="btn btn-danger"><i class="icon-trash icon-white"></i>Delete</button>
-        <button id='btn-update' class="btn btn-success"><i class="icon-ok icon-white"></i>Update</button>                
-        <button id='btn-cancel' class="btn btn-warning"><i class="icon-ban-circle icon-white"></i>Cancel</button>
-        <button id='btn-publish' class="btn btn-success"><i class="icon-upload icon-white"></i>Publish</button>
+        <button id='img-delete' class="btn btn-danger"><i class="icon-trash icon-white"></i>Delete</button>
+        <button id='img-update' class="btn btn-success"><i class="icon-ok icon-white"></i>Update</button>                
+        <button id='img-cancel' class="btn btn-warning"><i class="icon-ban-circle icon-white"></i>Cancel</button>
+        <button id='img-publish' class="btn btn-success"><i class="icon-upload icon-white"></i>Publish</button>
     </div>
 </div>           
 <div id="add-vid" style="display:none;"> 

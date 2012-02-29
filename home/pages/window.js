@@ -11,10 +11,10 @@ $(document).ready(function(){
 	var ldr = new ImageUploader($('#my-form'), $('input[type=file]'));
 	ldr.addListener('UPLOAD_INIT', onImageUploadInit);
 	ldr.addListener('UPLOAD_COMPLETE', onImageUploadComplete);
-	$("#btn-publish").click(publishImage);
-	$("#btn-cancel").click(cancelImage);	
-	$("#btn-update").click(updateImage);
-	$("#btn-delete").click(deleteImage);	
+	$("#img-cancel").click(cancelImage);	
+	$("#img-update").click(updateImage);
+	$("#img-delete").click(deleteImage);
+	$("#img-publish").click(publishImage);
 }); 
 
 // public methods //
@@ -28,7 +28,7 @@ function onAddImageClick()
 
 function publishImage()
 {
-	proxy.publishImage(pid, imgName, $("#img-desc").val());
+	proxy.publishImage(pid, imgName, $("#img-description textarea").val());
 }
 
 function cancelImage()
@@ -38,8 +38,7 @@ function cancelImage()
 
 function updateImage()
 {
-	console.log('update');
-	proxy.updateImage(pid, imgName, $("#img-desc").val());
+	proxy.updateImage(pid, imgName, $("#img-description textarea").val());
 }
 
 function deleteImage()
@@ -96,7 +95,7 @@ function onImageCancelled(response)
 {
 	imgFile = null;	
 	setViewMode('RESET');
-	console.log(response);	
+	console.log(response);
 }
 
 function onImageDetails(response)
@@ -114,13 +113,13 @@ function setImageDetails()
 // truncate image file name if too long... //
 	var name = (imgName.length <= 22) ? imgName : '...'+imgName.substr(-22);
  	$('#img-name').text(name);
-	$("#img-desc").val(imgDesc)	
- 	$('#preview img').attr('src', imgFile);	
+	$("#img-description textarea").val(imgDesc);
+ 	$('#img-container img').attr('src', imgFile);
 }
 
 function openWindow()
 {
-	$("#add-img h2").html($("#title").val());
+	$("#add-img h2").html($("#project-title").val());
 	win.windowSourceID = '#add-img'; 	
 	win.functionCallOnClose = onUploaderClosed;
 	$(this).openDOMWindow(win);	
@@ -141,21 +140,21 @@ function setViewMode(s)
 {
 	switch(s){
 		case 'EDITING' :		
-	 		$('#my-form').hide(); $('#loader').hide(); $('#preview').show();
-			$('#btn-delete').show(); $('#btn-update').show(); $('#btn-cancel').hide(); $('#btn-publish').hide();	
+	 		$('#my-form').hide(); $('#loader').hide(); $('#img-preview').show();
+			$('#img-delete').show(); $('#img-update').show(); $('#img-cancel').hide(); $('#img-publish').hide();	
 		break;				
 		case 'LOADING' :
-	 		$('#my-form').hide(); $('#loader').fadeIn(); $('#preview').fadeOut();
-			$('#btn-delete').hide(); $('#btn-update').hide(); $('#btn-cancel').hide(); $('#btn-publish').hide();	
+	 		$('#my-form').hide(); $('#loader').fadeIn(); $('#img-preview').fadeOut();
+			$('#img-delete').hide(); $('#img-update').hide(); $('#img-cancel').hide(); $('#img-publish').hide();	
 		break;
 		case 'PREVIEW' :
-	 		$('#my-form').hide(); $('#loader').fadeOut(); $('#preview').fadeIn();
-			$('#btn-delete').hide(); $('#btn-update').hide(); $('#btn-cancel').fadeIn(); $('#btn-publish').fadeIn();	
+	 		$('#my-form').hide(); $('#loader').fadeOut(); $('#img-preview').fadeIn();
+			$('#img-delete').hide(); $('#img-update').hide(); $('#img-cancel').fadeIn(); $('#img-publish').fadeIn();	
 		break;
 		case 'RESET' :
-		 	$('#preview img').attr('src', ''); $('#img-desc').val(''); imgDesc = '';
-	 		$('#my-form').fadeIn(); $('#loader').fadeOut(); $('#preview').fadeOut();
-			$('#btn-delete').fadeOut(); $('#btn-update').fadeOut(); $('#btn-cancel').fadeOut(); $('#btn-publish').fadeOut();
+		 	$('#img-preview img').attr('src', ''); $('#img-description textarea').val(''); imgDesc = '';
+	 		$('#my-form').fadeIn(); $('#loader').fadeOut(); $('#img-preview').fadeOut();
+			$('#img-delete').fadeOut(); $('#img-update').fadeOut(); $('#img-cancel').fadeOut(); $('#img-publish').fadeOut();
 		break;
 	}
 }
