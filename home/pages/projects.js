@@ -2,10 +2,10 @@ var pid; // the currently selected project id //
 
 $(document).ready(function() {
 
-	$("#media ul").sortable({stop: function(e, o) { onImageSort() }});
-	$("#media ul").disableSelection();
 	$("#project-list ul").sortable({stop: function(e, o) { onProjectSort() }});
 	$("#project-list ul").disableSelection();
+	$("#project-media ul").sortable({stop: function(e, o) { onImageSort() }});	
+	$("#project-media ul").disableSelection();		
 	$("#project-new").click(function() { showNewProjectTemplate(); });
 	$("#project-save").click(function() { addNewProject(); });	
 	$("#project-edit").click(function() { editProject(); });
@@ -32,22 +32,22 @@ $(document).ready(function() {
 	{
 		var k = $.parseJSON( proj );
 		pid = k['id'];
-		$("#title").val(k['title']);
-		$("#description").val(k['desc']);
-		$("#content h2").html(k['title']);
+		$("#project-title").val(k['title']);
+		$("#project-description").val(k['desc']);
+		$("#project-content h2").html(k['title']);
 		showProjectDetails();
 		proxy.getProjectImages(pid);		
 	}
 	
 	function onProjectImages(imgs)
 	{
-		$("#image-grid").empty();		
+		$("#project-media-grid").empty();		
 		var imgs = $.parseJSON( imgs );
 		if (imgs){
 			$.each(imgs, function(i, o) {
-				var k = $("#image-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
+				var k = $("#project-media-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
 	  		});
-			$('#image-grid li img').each(function(i, o) {
+			$('#project-media-grid li img').each(function(i, o) {
 				var s = $(o).attr('src'); s = s.substr(s.lastIndexOf('/') + 1);
 				$(o).click(function(){ proxy.getImageDetails(pid, s)});
 				$(o).hide(); $(o).delay(i * 100).fadeIn();				
@@ -59,27 +59,24 @@ $(document).ready(function() {
 
 	function addNewProject()
 	{
-		if ($("#title").val() == ''){
+		if ($("#project-title").val() == ''){
 			alert('please enter a title for this project');			
-		}	else if ($("#description").val() == ''){
+		}	else if ($("#project-description").val() == ''){
 			alert('please enter a description for this project');
 		}	else{
-			proxy.addProject($("#title").val(), $("#description").val());
+			proxy.addProject($("#project-title").val(), $("#project-description").val());
 		}
-		return false;		
 	}
 	
 	function editProject()
 	{
-		proxy.updateProject(pid, $("#title").val(), $("#description").val());
-		return false;		
+		proxy.updateProject(pid, $("#project-title").val(), $("#project-description").val());
 	}
 	
 	function deleteProject()
 	{
 		var k = confirm('Are you sure you want to delete this project?');
 		if (k == true) proxy.deleteProject(pid);
-		return false;		
 	}
 	
 	function onProjectDeleted(projects)
@@ -102,7 +99,7 @@ $(document).ready(function() {
 	function onImageSort()
 	{
 		var a = [];
-		$("#media ul li img").each(function(i, o){
+		$("#project-media ul li img").each(function(i, o){
 			f = $(o).attr('src');
 			a.push({id:i+1, file:f.substr(f.lastIndexOf('/') + 1)});
 		})
@@ -112,22 +109,22 @@ $(document).ready(function() {
 // view states //
 	function showProjectDetails()
 	{
-		$("#media").show();
+		$("#project-media").show();
 		$("#project-save").hide();
-		$("#project-update").show();
+		$("#project-edit").show();
 		$("#project-delete").show();			
 	}
 	
 	function showNewProjectTemplate()
 	{	
-		$("#media").hide();		
-		$("#image-grid").empty();		
+		$("#project-media").hide();		
+		$("#project-media-grid").empty();		
 		$("#project-save").show();
-		$("#project-update").hide();
+		$("#project-edit").hide();
 		$("#project-delete").hide();
-		$("#title").val('');
-		$("#description").val('');
-		$("#content h2").html('New Project');		
+		$("#project-title").val('');
+		$("#project-description").val('');
+		$("#project-content h2").html('New Project');		
 	}
 	
 	proxy.getProjects(); showNewProjectTemplate();

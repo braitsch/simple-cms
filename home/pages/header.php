@@ -20,7 +20,7 @@
                     <a class="brand" href="#">Hey <?php echo(ucfirst($_SESSION['user']));?>, you look great today!</a>
                     <ul id='main-nav' class="nav">
                         <li><a href="#home">Home</a></li>              
-                        <li class="active"><a href="#projects">Projects</a></li> 
+                        <li><a href="#projects">Projects</a></li>
                         <li><a href="#press">Press</a></li>
                         <li><a href="#contact">Contact</a></li>            
                     </ul>
