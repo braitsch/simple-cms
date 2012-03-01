@@ -61,7 +61,13 @@ switch ($_REQUEST['type']) {
     break;
     case 'DELETE_PRESS_ITEM':
         deletePressItem();
-    break;    
+    break; 
+    case 'GET_CONTACT_INFO':
+        getContactInfo();
+    break;      
+    case 'SET_CONTACT_INFO':
+        setContactInfo();
+    break;        
 }
 
 // -- projects & details --  //
@@ -287,5 +293,22 @@ function deletePressItem()
     }   else{
         echo mysql_error();
     } 
+}
+
+function getContactInfo()
+{
+    $r = mysql_query("SELECT * FROM `contact` LIMIT 1");
+    echo json_encode(mysql_fetch_array($r));
+}
+
+function setContactInfo()
+{
+    $n = $_REQUEST['name']; $e = $_REQUEST['email']; 
+    $r = mysql_query("UPDATE `contact` SET `name`='$n', `email`='$e'");
+    if ($r) {
+        echo 'ok';
+    }   else{
+        echo mysql_error();
+    }     
 }
 

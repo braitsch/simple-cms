@@ -39,7 +39,7 @@ function Proxy()
 		$.ajax({
 			type: "POST", url: php_script,
 			data: { type:'EDIT_PROJECT', id:pid, title:t, desc:d },
-			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
+			success: function(projects) { alert('project updated!'); dispatch('PROJECTS_LOADED', projects);}
 		});		
 	}	
 	this.deleteProject = function(pid)
@@ -146,7 +146,7 @@ function Proxy()
 		$.ajax({
 			type: "POST", url: php_script,
 		    data: { type:'EDIT_PRESS_ITEM', pid:pid, pub:p, desc:d, link:l },
-			success: function(response) { dispatch('PRESS_ITEMS_LOADED', response);}
+			success: function(response) { alert('item updated!'); dispatch('PRESS_ITEMS_LOADED', response);}
 		});		
 	}
 	this.deletePressItem = function(pid)
@@ -156,7 +156,26 @@ function Proxy()
 		    data: { type:'DELETE_PRESS_ITEM', pid:pid },
 			success: function(response) { dispatch('PRESS_ITEM_DELETED', response);}
 		});
-	}	
+	}
+	
+// personal contact information //
+
+	this.getContactInfo = function(n, e)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'GET_CONTACT_INFO' },
+			success: function(response) { dispatch('CONTACT_INFO_RECEIEVED', response);}
+		});
+	}
+	this.setContactInfo = function(n, e)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'SET_CONTACT_INFO', name:n, email:e },
+			success: function(response) { alert('contact information updated!'); }
+		});
+	}
 	
 // simple event dispatching //
 
