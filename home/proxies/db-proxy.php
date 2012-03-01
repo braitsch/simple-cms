@@ -43,8 +43,28 @@ switch ($_REQUEST['type']) {
     break;
     case 'CANCEL_IMAGE':
         cancelImage();
-    break;                     
+    break; 
+    case 'GET_PRESS_LIST':
+        getPressList();
+    break;
+    case 'GET_PRESS_ITEM_DETAILS':
+        getPressItemDetails();
+    break;
+    case 'SORT_PRESS_ITEMS':
+        sortPressItems();
+    break;
+    case 'ADD_PRESS_ITEM':
+        addPressItem();
+    break;
+    case 'EDIT_PRESS_ITEM':
+        editPressItem();
+    break;
+    case 'DELETE_PRESS_ITEM':
+        deletePressItem();
+    break;    
 }
+
+// -- projects & details --  //
 
 function getProjectList()
 {
@@ -112,7 +132,7 @@ function deleteProject()
     }   			
 }
 
-// image functions //
+// -- project images --  //
 
 function getProjectImages()
 {
@@ -206,4 +226,66 @@ function deleteFile($f)
     unlink('../' . IMG_TMB_DIR . '/' . $f);
 }
 
+// -- press items -- // 
+
+function getPressList()
+{
+    $a = array();
+    $r = mysql_query("SELECT id, publisher FROM `press` ORDER BY `pos`");
+    while($p = mysql_fetch_array($r)) array_push($a, $p);
+    echo json_encode($a);
+}
+
+function getPressItemDetails()
+{
+    $id = $_REQUEST['pid'];    
+    $r = mysql_query("SELECT * FROM `press` WHERE id='$id'");
+    echo json_encode(mysql_fetch_array($r));
+}
+
+function sortPressItems()
+{
+    $arr = $_REQUEST['data'];
+    foreach ($arr as &$obj) {
+        $p = $obj['pos']; $id = $obj['id'];
+        $r = mysql_query("UPDATE `press` SET `pos`='$p' WHERE id='$id'");
+        if (!$r) echo mysql_error();
+    }
+}
+
+function addPressItem()
+{
+    $pub = $_REQUEST['pub']; $desc = $_REQUEST['desc']; $link = $_REQUEST['link'];
+    $r = mysql_query("INSERT INTO press (`publisher`, `desc`, `link`) VALUES ('$pub', '$desc', '$link')");
+// return the updated list of press items //    
+    if ($r) {
+        getPressList();
+    }   else{
+        echo mysql_error();
+    }  
+}
+
+function editPressItem()
+{
+    $id = $_REQUEST['pid']; $pub = $_REQUEST['pub']; $desc = $_REQUEST['desc']; $link = $_REQUEST['link'];
+    $r = mysql_query("UPDATE `press` SET `publisher`='$pub', `desc`='$desc', `link`='$link' WHERE id='$id'");
+// return the updated list of press items //
+    if ($r) {
+        getPressList();
+    }   else{
+        echo mysql_error();
+    } 
+}
+
+function deletePressItem()
+{
+    $id = $_REQUEST['pid'];    
+    $r = mysql_query("DELETE FROM press WHERE id='$id'");
+// return the updated list of press items //
+    if ($r) {
+        getPressList();
+    }   else{
+        echo mysql_error();
+    } 
+}
 

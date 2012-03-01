@@ -53,6 +53,11 @@ $(document).ready(function() {
 				$(o).hide(); $(o).delay(i * 100).fadeIn();				
 			});
 		}
+	}	
+	
+	function onProjectDeleted(projects)
+	{
+		showNewProjectTemplate(); onProjectList(projects);
 	}		
 	
 // button events //		
@@ -77,12 +82,6 @@ $(document).ready(function() {
 	{
 		var k = confirm('Are you sure you want to delete this project?');
 		if (k == true) proxy.deleteProject(pid);
-	}
-	
-	function onProjectDeleted(projects)
-	{
-		showNewProjectTemplate();
-		onProjectList(projects);
 	}		
 	
 // list sorting //			
@@ -107,6 +106,7 @@ $(document).ready(function() {
 	}	
 	
 // view states //
+
 	function showProjectDetails()
 	{
 		$("#project-media").show();

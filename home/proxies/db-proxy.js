@@ -7,7 +7,7 @@ function Proxy()
 		$.ajax({
 			type: "POST", url: php_script,
 			data: { type:'GET_PROJECT_LIST' },
-			success: function(projects) { dispatch('PROJECTS_LOADED', projects);}
+			success: function(projects) { if (projects) dispatch('PROJECTS_LOADED', projects);}
 		});
 	}
 	this.getProjectDetails = function(pName)
@@ -83,7 +83,7 @@ function Proxy()
 			success: function(response) { dispatch('IMAGE_PUBLISHED', response);}
 		});
 	}
-	this.updateImage = function(pid, f, d)
+	this.editImage = function(pid, f, d)
 	{
 		$.ajax({
 			type: "POST", url: php_script,
@@ -108,7 +108,58 @@ function Proxy()
 		});		
 	}
 	
-// simple event dispatching //	
+// press items //
+	this.getPressList = function()
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'GET_PRESS_LIST'},
+			success: function(response) { dispatch('PRESS_ITEMS_LOADED', response);}
+		});
+	}
+	this.getPressItemDetails = function(pid)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'GET_PRESS_ITEM_DETAILS', pid:pid},
+			success: function(response) { dispatch('PRESS_ITEM_SELECTED', response);}
+		});
+	}	
+	this.setPressListPositions = function(a)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+			data: { type:'SORT_PRESS_ITEMS', data:a},
+			success: function(response) { console.log(response);}
+		});		
+	}	
+	this.addPressItem = function(p, d, l)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'ADD_PRESS_ITEM', pub:p, desc:d, link:l },
+			success: function(response) { dispatch('PRESS_ITEMS_LOADED', response);}
+		});		
+	}
+	this.editPressItem = function(pid, p, d, l)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'EDIT_PRESS_ITEM', pid:pid, pub:p, desc:d, link:l },
+			success: function(response) { dispatch('PRESS_ITEMS_LOADED', response);}
+		});		
+	}
+	this.deletePressItem = function(pid)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'DELETE_PRESS_ITEM', pid:pid },
+			success: function(response) { dispatch('PRESS_ITEM_DELETED', response);}
+		});
+	}	
+	
+// simple event dispatching //
+
 	var _listeners = [];
 	this.addListener = function(e, f)
 	{

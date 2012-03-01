@@ -11,8 +11,8 @@ $(document).ready(function(){
 	var ldr = new ImageUploader($('#my-form'), $('input[type=file]'));
 	ldr.addListener('UPLOAD_INIT', onImageUploadInit);
 	ldr.addListener('UPLOAD_COMPLETE', onImageUploadComplete);
-	$("#img-cancel").click(cancelImage);	
-	$("#img-update").click(updateImage);
+	$("#img-update").click(editImage);	
+	$("#img-cancel").click(cancelImage);
 	$("#img-delete").click(deleteImage);
 	$("#img-publish").click(publishImage);
 }); 
@@ -31,14 +31,14 @@ function publishImage()
 	proxy.publishImage(pid, imgName, $("#img-description textarea").val());
 }
 
+function editImage()
+{
+	proxy.editImage(pid, imgName, $("#img-description textarea").val());
+}
+
 function cancelImage()
 {
 	proxy.cancelImageUpload(imgName);
-}
-
-function updateImage()
-{
-	proxy.updateImage(pid, imgName, $("#img-description textarea").val());
 }
 
 function deleteImage()

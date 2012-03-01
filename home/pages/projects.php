@@ -8,7 +8,7 @@
     <div id='project-content' class='page-content'>
         <h2>New Project</h2>      
         <div class='details'>
-            <label for="project-title">Title</label>
+            <label for="project-title">Title<span class='required'>*</span></label>
             <input id="project-title" name="project-title" class="span5" type="text" />
             <label for="textarea">Description</label>
             <textarea id='project-description' name='project-description' class="span5" rows="16"></textarea>
