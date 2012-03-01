@@ -1,4 +1,4 @@
-var imgName, imgFile, imgDesc;
+var imgName, imgPath, imgDesc;
 var win = {	width:680, height:340, overlayOpacity:'50'};
 
 proxy.addListener('IMAGE_DETAILS', onImageDetails);
@@ -52,19 +52,24 @@ function deleteImage()
 function onImageUploadInit()
 {
 	setViewMode('LOADING');
+	var n = $('input[type=file]').val();
+		n = n.substr(n.lastIndexOf('\\') + 1);
+// truncate image file name if too long... //		
+		n.length <= 22 ? n : '...'+n.substr(-22);
+ 	$('#img-name').text(n);
 }
 
 function onImageUploadComplete(f)
 { 
 	setViewMode('PREVIEW');	
-	imgFile = './'+f;
+	imgPath = './'+f;
 	imgName = getImageFileName();
 	setImageDetails();
 }
 
 function onImagePublished(response)
 {
-	imgFile = null;	
+	imgPath = null;	
 	if (response == 'ok') {
 		proxy.getProjectImages(pid);
 	}	else{
@@ -75,7 +80,7 @@ function onImagePublished(response)
 
 function onImageEdited(response)
 {
-	imgFile = null;		
+	imgPath = null;		
 	if (response == 'ok') {
 		alert('image updated!');
 	}	else{
@@ -86,14 +91,14 @@ function onImageEdited(response)
 
 function onImageDeleted(response)
 {
-	imgFile = null;
+	imgPath = null;
 	$.closeDOMWindow();
 	proxy.getProjectImages(pid);	
 }
 
 function onImageCancelled(response)
 {
-	imgFile = null;	
+	imgPath = null;	
 	setViewMode('RESET');
 	console.log(response);
 }
@@ -101,20 +106,17 @@ function onImageCancelled(response)
 function onImageDetails(response)
 {
 	var k = $.parseJSON( response );
-	imgFile = './'+k['file']; 
-	imgName = getImageFileName();
+	imgPath = './'+k['file'];
 	imgDesc = k['desc'];
+	imgName = getImageFileName();	
 	setImageDetails();	
 	openWindow(); setViewMode('EDITING');
 }
 
 function setImageDetails()
 {
-// truncate image file name if too long... //
-	var name = (imgName.length <= 22) ? imgName : '...'+imgName.substr(-22);
- 	$('#img-name').text(name);
 	$("#img-description textarea").val(imgDesc);
- 	$('#img-container img').attr('src', imgFile);
+ 	$('#img-container img').attr('src', imgPath);
 }
 
 function openWindow()
@@ -128,19 +130,19 @@ function openWindow()
 function onUploaderClosed()
 {
 	setViewMode('RESET');
-	if (imgFile) cancelImage();
+	if (imgPath) cancelImage();
 }
 
 function getImageFileName()
 {
-	return imgFile.substr(imgFile.lastIndexOf('/') + 1);
+	return imgPath.substr(imgPath.lastIndexOf('/') + 1);
 }
 
 function setViewMode(s)
 {
 	switch(s){
 		case 'EDITING' :		
-	 		$('#my-form').hide(); $('#loader').hide(); $('#img-preview').show();
+	 		$('#my-form').hide(); $('#loader').hide(); $('#img-preview').show(); $('#img-preview label').hide();
 			$('#img-delete').show(); $('#img-update').show(); $('#img-cancel').hide(); $('#img-publish').hide();	
 		break;				
 		case 'LOADING' :
@@ -148,7 +150,7 @@ function setViewMode(s)
 			$('#img-delete').hide(); $('#img-update').hide(); $('#img-cancel').hide(); $('#img-publish').hide();	
 		break;
 		case 'PREVIEW' :
-	 		$('#my-form').hide(); $('#loader').fadeOut(); $('#img-preview').fadeIn();
+	 		$('#my-form').hide(); $('#loader').fadeOut(); $('#img-preview').fadeIn(); $('#img-preview label').show(); 
 			$('#img-delete').hide(); $('#img-update').hide(); $('#img-cancel').fadeIn(); $('#img-publish').fadeIn();	
 		break;
 		case 'RESET' :

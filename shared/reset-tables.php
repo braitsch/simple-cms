@@ -55,8 +55,8 @@ function run_query($q)
     }
 }
 
-//run_query($q6);
 //run_query("DROP TABLE `projects`");
-//run_query("DROP TABLE `media`");
+run_query("DROP TABLE `media`");
+run_query($q2);
 //run_query("DROP TABLE `press`");
 

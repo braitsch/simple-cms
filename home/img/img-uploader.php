@@ -3,8 +3,9 @@
 require_once('../../shared/globals.php');
 
 // image file that was uploaded
-$src_img = $_FILES['file']['tmp_name'];
-$img_name = $_FILES['file']['name'];
+$img_name = md5(time()) . '.jpg';
+$tmp_file = $_FILES['file']['tmp_name'];
+$src_name = $_FILES['file']['name'];
  
 function copyImage($img)
 {
@@ -34,16 +35,15 @@ function resizeImage($img, $width, $height)
     return $new;
 }
 
-$src = copyImage($src_img);
+$src = copyImage($tmp_file);
 imagejpeg($src, '../' . IMG_SRC_DIR . "/$img_name", 100);
 imagedestroy($src);
 
-$tmb = resizeImage($src_img, 160, 120);
+$tmb = resizeImage($tmp_file, 160, 120);
 imagejpeg($tmb, '../' . IMG_TMB_DIR . "/$img_name", 100);
 imagedestroy($tmb);
 
-$a = array('file' => IMG_TMB_DIR.'/'.$img_name, 'name' => $img_name);
-echo json_encode($a);
+echo json_encode(array('file' => IMG_TMB_DIR.'/'.$img_name));
 
 // this simply moves the uploaded file into a directory on the server
-// move_uploaded_file($src_img, "$src_dir/$img_name");
+// move_uploaded_file($tmp_file, "$src_dir/$src_name");

@@ -3,13 +3,11 @@
 #header{
 	margin:20px 20px 20px 30px; height:40px;
 }
-#header h2{
-	float:left;
-}
+
 .browse-img {
 	overflow:hidden;
 	position: relative;	
-	margin:6px 0 0 20px;
+	margin-top:14px;
 }
 .browse-img input {
   opacity: 0;	
@@ -35,18 +33,26 @@
 	height:160px;
 	border:1px solid grey;
 }
+#img-preview label{
+	position:absolute;
+}
 #img-details {
 	float:left;
 	margin-right:10px;
 }
 #img-container {
 	width:160px;
-	height:120px;	
-	border:1px solid #ccc;	
+	height:120px;
+	border:1px solid #ccc;
+	position:absolute; margin-top:18px;
+}
+#img-description label{
+	margin-left:175px;
 }
 #img-description textarea {
 	width:412px; 
 	height:110px;	
+	margin:18px 0 0 170px;	
 }
 
 #controls{
