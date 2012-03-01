@@ -24,7 +24,7 @@ $(document).ready(function() {
 	{
 		var a = projects.split(',');
 		$("#project-list ul").empty();
-		for (var i=0; i < a.length - 1; i++) $("#project-list ul").append("<li class='ui-state-default'><span class='ui-icon ui-icon-arrowthick-2-n-s'></span>"+ a[i] +"</li>");
+		for (var i=0; i < a.length - 1; i++) $("#project-list ul").append("<li>"+ a[i] +"</li>");
 		$("#project-list li").click(function() { proxy.getProjectDetails($(this).text()); });
 	}
 	
@@ -45,7 +45,7 @@ $(document).ready(function() {
 		var imgs = $.parseJSON( imgs );
 		if (imgs){
 			$.each(imgs, function(i, o) {
-				var k = $("#project-media-grid").append("<li><img src="+'./files/tmb/'+o['file']+"></li>");
+				var k = $("#project-media-grid").append("<li class='image-thumb'><img src="+'./files/tmb/'+o['file']+"></li>");
 	  		});
 			$('#project-media-grid li img').each(function(i, o) {
 				var s = $(o).attr('src'); s = s.substr(s.lastIndexOf('/') + 1);

@@ -158,6 +158,26 @@ function Proxy()
 		});
 	}
 	
+// homepage //
+
+	this.getHomePageInfo = function()
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'GET_HOMEPAGE_INFO' },
+			success: function(response) { dispatch('HOMEPAGE_INFO_RECEIEVED', response); }
+		});		
+	}
+	
+	this.setHomePageDesc = function(d)
+	{
+		$.ajax({
+			type: "POST", url: php_script,
+		    data: { type:'SET_HOMEPAGE_SUMMARY', desc:d },
+			success: function(response) { alert('cover description updated!'); }
+		});
+	}	
+	
 // personal contact information //
 
 	this.getContactInfo = function(n, e)

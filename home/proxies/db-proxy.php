@@ -62,6 +62,12 @@ switch ($_REQUEST['type']) {
     case 'DELETE_PRESS_ITEM':
         deletePressItem();
     break; 
+    case 'GET_HOMEPAGE_INFO':
+        getHomePageInfo();
+    break;      
+    case 'SET_HOMEPAGE_SUMMARY':
+        setHomePageSummary();
+    break;      
     case 'GET_CONTACT_INFO':
         getContactInfo();
     break;      
@@ -293,6 +299,23 @@ function deletePressItem()
     }   else{
         echo mysql_error();
     } 
+}
+
+function getHomePageInfo()
+{
+    $r = mysql_query("SELECT * FROM `home-page` LIMIT 1");
+    echo json_encode(mysql_fetch_array($r));
+}
+
+function setHomePageSummary()
+{
+    $d = $_REQUEST['desc'];
+    $r = mysql_query("UPDATE `home-page` SET `desc`='$d'");
+    if ($r) {
+        echo 'ok';
+    }   else{
+        echo mysql_error();
+    }     
 }
 
 function getContactInfo()

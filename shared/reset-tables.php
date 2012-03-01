@@ -37,7 +37,13 @@ $q4 = 'CREATE TABLE `contact` (
         `email` VARCHAR( 255 ) NOT NULL
        ) ENGINE = InnoDB'; 
        
-$q5 = "INSERT into `contact` (`name`, `email`) VALUES ('Alicia Escott', 'alicia@aliciaescott.com')";
+$q5 = 'CREATE TABLE `home-page` (
+        `file` VARCHAR( 50 ) NOT NULL,
+        `desc` TEXT NOT NULL
+       ) ENGINE = InnoDB';
+       
+$q6 = "INSERT into `home-page` (`file`, `desc`) VALUES ('', '')";       
+$q7 = "INSERT into `contact` (`name`, `email`) VALUES ('Alicia Escott', 'alicia@aliciaescott.com')";
 
 function run_query($q)
 {
@@ -49,7 +55,8 @@ function run_query($q)
     }
 }
 
-run_query($q5);
+//run_query($q6);
 //run_query("DROP TABLE `projects`");
 //run_query("DROP TABLE `media`");
 //run_query("DROP TABLE `press`");
+
